@@ -1,10 +1,13 @@
 #+TITLE: 7TV Emotes on YouTube Comments
 
-Another third party thing that adds 7TV emotes to YouTube comments.
+Yeah, but userscripts are like a third party thing and... I don't know...
 
- * Enables 7TV global emotes on every channel (can manually disable in script)
- * Enables 7TV channel emotes on YouTube channels that are linked on 7TV
+ * +Enables 7TV global emotes on every channel (can manually disable in script)+
+ * Enables 7TV channel emotes on comments sections of YouTube channels that are linked on 7TV
 
 * Todo List
+
 ** TODO replace function with a jquery ~$.initialize()~
    [[./src/main.ts::43]]
+
+** TODO global emotes
