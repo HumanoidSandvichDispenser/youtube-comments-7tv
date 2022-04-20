@@ -11,9 +11,7 @@ interface SevenTVEmote {
     urls: string[][],
 }
 
-const emotes = {
-
-}
+const emotes: {[name: string]: string} = { }
 
 function fetchChannelEmotes(channelID: string) {
     // @ts-ignore
