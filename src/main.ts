@@ -7,14 +7,22 @@
 
 /// <reference path="request.ts" />
 
-function scanComments(): void  {
+const parsedComments = new Map();
+
+function scanComments(skipParsedComments = true): void  {
     const comments = document.querySelectorAll(".ytd-comment-renderer#content-text");
     comments.forEach(comment => {
-        placeEmote(comment);
+        // if we already parsed emotes for this comment, skip it
+        if (skipParsedComments && parsedComments.has(comment)) {
+            return;
+        }
+
+        placeEmotes(comment);
+        parsedComments.set(comment, true);
     });
 }
 
-function placeEmote(comment: Element): void {
+function placeEmotes(comment: Element): void {
     const words = comment.innerHTML.split(" ");
     words.forEach((word, i) => {
         if (word in emotes) {
@@ -26,12 +34,16 @@ function placeEmote(comment: Element): void {
     comment.innerHTML = words.join(" ");
 }
 
-function main(): void {
+async function main(): Promise<void> {
+    // fetch global emotes before fetching channel emotes
+    fetchGlobalEmotes();
+
     // this is just a hacky way to get the channel ID
-    const channelLink: HTMLAnchorElement = document.querySelector(".ytd-channel-name .yt-simple-endpoint");
+    const channelLink: HTMLAnchorElement = document
+            .querySelector(".ytd-channel-name .yt-simple-endpoint");
 
     if (channelLink == undefined || channelLink == null) {
-        setTimeout(main, 5000);
+        setTimeout(main, 2500);
         return;
     }
 
@@ -40,7 +52,6 @@ function main(): void {
     console.log(channelID);
     fetchChannelEmotes(channelID);
 
-    // TODO: replace this with a jquery `$.initialize()`
     setInterval(scanComments, 250);
 }
 

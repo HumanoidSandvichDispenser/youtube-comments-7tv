@@ -13,11 +13,11 @@ interface SevenTVEmote {
 
 const emotes: {[name: string]: string} = { }
 
-function fetchChannelEmotes(channelID: string) {
+function fetchEmotes(apiURL: string, isScanningComments = true) {
     // @ts-ignore
     GM.xmlHttpRequest({
         method: "GET",
-        url: `https://api.7tv.app/v2/users/${channelID}/emotes`,
+        url: apiURL,
         headers: {
             "Accept": "application/json"
         },
@@ -25,8 +25,24 @@ function fetchChannelEmotes(channelID: string) {
         onload: function(response: XMLHttpRequest) {
             response.response.forEach((emote: SevenTVEmote) => {
                 emotes[emote.name] = emote.urls[0][1];
+
+                // Since we updated the emotes list, some comments may not have
+                // the new emotes. Therefore we must clear the list of parsed
+                // comments.
+                parsedComments.clear();
             });
-            scanComments();
+
+            if (isScanningComments) {
+                scanComments();
+            }
         }
     });
+}
+
+function fetchChannelEmotes(channelID: string) {
+    fetchEmotes(`https://api.7tv.app/v2/users/${channelID}/emotes`);
+}
+
+function fetchGlobalEmotes() {
+    fetchEmotes("https://api.7tv.app/v2/emotes/global", false);
 }

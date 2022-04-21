@@ -7,8 +7,7 @@ Yeah, but userscripts are like a third party thing and... I don't know...
  * Make (requires ~typescript~) or [[https://humanoidsandvichdispenser.github.io/youtube-comments-7tv/script.user.js][install]].
 
 * Todo List
-
-** TODO replace function with a jquery ~$.initialize()~
+** CANCELLED +replace function with a jquery ~$.initialize()~+
    [[./src/main.ts::43]]
-
 ** TODO global emotes
+** TODO caching
