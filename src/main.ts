@@ -7,21 +7,13 @@
 
 /// <reference path="request.ts" />
 
-const parsedComments = new Map();
-
 /**
  * @deprecated This function's purpose has been replaced by MutationObserver
  */
-function scanComments(skipParsedComments = true): void  {
+function scanComments(): void  {
     const comments = document.querySelectorAll(".ytd-comment-renderer#content-text");
     comments.forEach(comment => {
-        // if we already parsed emotes for this comment, skip it
-        if (skipParsedComments && parsedComments.has(comment)) {
-            return;
-        }
-
         placeEmotes(comment);
-        parsedComments.set(comment, true);
     });
 }
 

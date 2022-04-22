@@ -1,0 +1,23 @@
+{
+  "name": "youtube-comments-7tv",
+  "version": "1.0.0",
+  "description": "A third party thing that shows a YouTube channel's 7TV emotes in the comments section.",
+  "main": "src/main.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HumanoidSandvichDispenser/youtube-comments-7tv.git"
+  },
+  "author": "HumanoidSandvichDispenser",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/HumanoidSandvichDispenser/youtube-comments-7tv/issues"
+  },
+  "homepage": "https://github.com/HumanoidSandvichDispenser/youtube-comments-7tv#readme",
+  "devDependencies": {
+    "@types/greasemonkey": "^4.0.2",
+    "@types/node": "^17.0.25"
+  }
+}

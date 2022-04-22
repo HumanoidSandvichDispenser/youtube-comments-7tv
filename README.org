@@ -8,6 +8,10 @@ Yeah, but userscripts are like a third party thing and... I don't know...
  * Requires that your userscript manager supports ~GM.xmlHttpRequest~
 
 * Todo List
-** DONE +replace ~void scanComments~ with a ~MutationObserver~+
+** DONE Replace ~void scanComments~ with a ~MutationObserver~
 ** DONE Global emotes
 ** TODO Cache emote data
+** TODO Refresh emotes when window href changes
+** TODO Insert image elements programatically instead of modifying ~innerHTML~
+** TODO Configuration options
+*** Enable/disable global emotes on non-7TV channels
