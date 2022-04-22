@@ -13,36 +13,39 @@ interface SevenTVEmote {
 
 const emotes: {[name: string]: string} = { }
 
-function fetchEmotes(apiURL: string, isScanningComments = true) {
-    // @ts-ignore
-    GM.xmlHttpRequest({
-        method: "GET",
-        url: apiURL,
-        headers: {
-            "Accept": "application/json"
-        },
-        responseType: "json",
-        onload: function(response: XMLHttpRequest) {
-            response.response.forEach((emote: SevenTVEmote) => {
-                emotes[emote.name] = emote.urls[0][1];
+async function fetchEmotes(apiURL: string) {
+    return new Promise<void>((resolve, reject) => {
+        // @ts-ignore
+        GM.xmlHttpRequest({
+            method: "GET",
+            url: apiURL,
+            headers: {
+                "Accept": "application/json"
+            },
+            responseType: "json",
+            onload: (response: XMLHttpRequest) => {
+                response.response.forEach((emote: SevenTVEmote) => {
+                    emotes[emote.name] = emote.urls[0][1];
 
-                // Since we updated the emotes list, some comments may not have
-                // the new emotes. Therefore we must clear the list of parsed
-                // comments.
-                parsedComments.clear();
-            });
+                    // Since we updated the emotes list, some comments may not have
+                    // the new emotes. Therefore we must clear the list of parsed
+                    // comments.
+                    parsedComments.clear();
+                });
 
-            if (isScanningComments) {
-                scanComments();
+                resolve();
+            },
+            onerror: (response: XMLHttpRequest) => {
+                reject(response);
             }
-        }
+        });
     });
 }
 
-function fetchChannelEmotes(channelID: string) {
-    fetchEmotes(`https://api.7tv.app/v2/users/${channelID}/emotes`);
+async function fetchChannelEmotes(channelID: string) {
+    return await fetchEmotes(`https://api.7tv.app/v2/users/${channelID}/emotes`);
 }
 
-function fetchGlobalEmotes() {
-    fetchEmotes("https://api.7tv.app/v2/emotes/global", false);
+async function fetchGlobalEmotes() {
+    return await fetchEmotes("https://api.7tv.app/v2/emotes/global");
 }
