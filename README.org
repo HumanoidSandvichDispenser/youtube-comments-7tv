@@ -5,6 +5,7 @@ Yeah, but userscripts are like a third party thing and... I don't know...
  * +Enables 7TV global emotes on every channel (can manually disable in script)+
  * Enables 7TV channel emotes on comments sections of YouTube channels that are linked on 7TV
  * Make (requires ~typescript~) or [[https://humanoidsandvichdispenser.github.io/youtube-comments-7tv/script.user.js][install]].
+ * Requires that your userscript manager supports ~GM.xmlHttpRequest~
 
 * Todo List
 ** DONE +replace ~void scanComments~ with a ~MutationObserver~+
