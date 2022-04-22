@@ -7,10 +7,7 @@ all: script.user.js
 
 release: script.user.js
 	cp script.user.js script-release/
-	cd script-release
-	git add -f script.user.js
-	git commit -m "update"
-	git push
+	cd script-release && git add script.user.js && git commit -m "update" && git push
 
 clean:
 	rm script.user.js
