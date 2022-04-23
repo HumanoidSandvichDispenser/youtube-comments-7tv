@@ -1,3 +1,4 @@
 obj/
 script.user.js
 script-release/
+node_modules/
