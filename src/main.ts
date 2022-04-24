@@ -90,37 +90,64 @@ async function main(): Promise<void> {
     const lastFetchTime = await GM.getValue("lastFetchTime", 0);
     const cacheExpireTime = lastFetchTime + (config.cacheTTL * 1000);
 
-    console.log("Last channel ID was " + lastChannelID);
-    console.log("This channel ID was " + channelID);
-    console.log(lastChannelID == channelID);
-    console.log("The emote cache expires at " + cacheExpireTime);
-    console.log("Right now it is " + Date.now());
-    console.log(Date.now() < cacheExpireTime);
-
-    GM.getValue("lastChannelID").then(result => {
-        console.log("Got result: " + result);
-    });
-
     // if we are in the same channel, and emote cache has not grown stale
     if (lastChannelID == channelID && Date.now() < cacheExpireTime) {
         console.log("Fetching cached emotes.");
 
         // then we will fetch emotes from cache
         await fetchCachedEmotes();
+
+        scanComments(); // comments may have loaded before the script reaches here
+        observeComments();
     } else {
         console.log("Fetching new emotes...");
 
         // otherwise, fetch emotes from 7TV API
-        await fetchChannelEmotes(channelID); // fetch global before channel
-        await fetchGlobalEmotes();
-        GM.setValue("lastChannelID", channelID);
-        GM.setValue("lastFetchTime", Date.now());
-        GM.setValue("cachedEmotes", JSON.stringify(emotes));
+        const emotesList = [];
+        const channelEmotesPromise = fetchChannelEmotes(channelID);
+
+        // fetch global emotes while waiting for channel emotes
+        // use Array.push.apply so we can concat and mutate arrays
+        emotesList.push.apply(emotesList, await fetchGlobalEmotes());
+
+        channelEmotesPromise.then(channelEmotes => {
+            // channel emotes exist. so let's add them.
+            console.log("This YouTube channel is linked to a 7TV account.")
+            emotesList.push.apply(emotesList, channelEmotes);
+        }).catch((response: GM.Response<any>) => {
+            if (response.status == 404) {
+                // channel emotes do not exist.
+                console.log("This YouTube chnanel is NOT linked to a 7TV account.");
+
+                if (!config.globalEmotesEverywhere) {
+                    // clear emotes list if we don't allow global emotes
+                    emotesList.splice(0, emotesList.length)
+                }
+            } else {
+                // we don't know wtf happened
+                throw response;
+            }
+        }).finally(() => {
+            console.log(`Adding ${emotesList.length} emote(s).`);
+            emotesList.forEach(emote => {
+                emotes[emote.name] = emote.urls[0][1];
+            });
+
+            GM.setValue("lastChannelID", channelID);
+            GM.setValue("lastFetchTime", Date.now());
+            GM.setValue("cachedEmotes", JSON.stringify(emotes));
+
+            scanComments(); // comments may have loaded before the script reaches here
+            observeComments();
+        });
     }
 
-    scanComments(); // comments may have loaded before the script reaches here
-    observeComments();
     console.log("Reached end of main");
+}
+
+unsafeWindow["clearEmoteCache"] = () => {
+    GM.setValue("lastFetchTime", 0);
+    GM.setValue("cachedEmotes", "{}");
 }
 
 main();

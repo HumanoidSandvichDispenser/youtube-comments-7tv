@@ -13,9 +13,8 @@ interface SevenTVEmote {
 
 var emotes: {[name: string]: string} = { }
 
-async function fetchEmotes(apiURL: string) {
-    console.log("Making request...");
-    return new Promise<void>((resolve, reject) => {
+async function fetchEmotes(apiURL: string): Promise<SevenTVEmote[]> {
+    return new Promise<SevenTVEmote[]>((resolve, reject) => {
         GM.xmlHttpRequest({
             method: "GET",
             url: apiURL,
@@ -26,11 +25,11 @@ async function fetchEmotes(apiURL: string) {
             // property in GM.Request when it should
             responseType: "json",
             onload: (response) => {
-                response.response.forEach((emote: SevenTVEmote) => {
-                    emotes[emote.name] = emote.urls[0][1];
-                });
+                if (response.status == 404) {
+                    reject(response);
+                }
 
-                resolve();
+                resolve(response.response);
             },
             onerror: (response) => {
                 reject(response);
@@ -40,11 +39,11 @@ async function fetchEmotes(apiURL: string) {
 }
 
 async function fetchChannelEmotes(channelID: string) {
-    await fetchEmotes(`https://api.7tv.app/v2/users/${channelID}/emotes`);
+    return fetchEmotes(`https://api.7tv.app/v2/users/${channelID}/emotes`);
 }
 
 async function fetchGlobalEmotes() {
-    await fetchEmotes("https://api.7tv.app/v2/emotes/global");
+    return fetchEmotes("https://api.7tv.app/v2/emotes/global");
 }
 
 async function fetchCachedEmotes() {
