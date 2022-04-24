@@ -4,14 +4,19 @@ Yeah, but userscripts are like a third party thing and... I don't know...
 
  * +Enables 7TV global emotes on every channel (can manually disable in script)+
  * Enables 7TV channel emotes on comments sections of YouTube channels that are linked on 7TV
- * Make (requires ~typescript~) or [[https://humanoidsandvichdispenser.github.io/youtube-comments-7tv/script.user.js][install]].
- * Requires that your userscript manager supports ~GM.xmlHttpRequest~
+
+* Installation
+
+Build with ~make~ (requires ~typescript~) or [[https://humanoidsandvichdispenser.github.io/youtube-comments-7tv/script.user.js][install from here]].
+
+Note that this script uses the GreaseMonkey API for various functions, so your userscript manager must support it.
 
 * Todo List
 ** DONE Replace ~void scanComments~ with a ~MutationObserver~
 ** DONE Global emotes
-** TODO Cache emote data
+** DONE Cache emote data
 ** TODO Refresh emotes when window href changes
 ** TODO Insert image elements programatically instead of modifying ~innerHTML~
-** TODO Configuration options
-*** Enable/disable global emotes on non-7TV channels
+** DONE Configuration options
+*** DONE Enable/disable global emotes on non-7TV channels
+*** DONE Emote cache time-to-live
